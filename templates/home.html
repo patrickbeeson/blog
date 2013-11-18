@@ -1,0 +1,95 @@
+{% extends "base_generic.html" %}
+
+{% load markup humanize generic_content comments getlinks blog cache %}
+
+{% block google_verify %}<meta name="verify-v1" content="o8J2ovHdQKesT6939b/GRBOpWdsGi/8rar9evwJI5l4=">{% endblock %}
+
+{% block page_type %}home{% endblock %}
+
+				{% block main_content %}
+					{% cache 500 home_latest_entries %}
+					<h2>Latest blog entries</h2>
+					<ul id="latest_entries">
+					{% for entry in entry_list %}
+						<li class="entry" id="entry-{{ entry.id }}">
+							<h3><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h3>
+							<div class="entry_body">
+								{{ entry.summary_html|safe }}
+								<p class="read_more"><strong><a href="{{ entry.get_absolute_url }}#more">Continue reading</a></strong></p>
+							</div>
+							<ul class="entry_meta">
+								<li class="byline">{{ entry.author.get_full_name }}</li>
+								<li class="date">{{ entry.pub_date|date:"N j, Y" }}</li>
+								<li class="time">{{ entry.pub_date|date:"f a" }}</li>
+								{% get_comment_count for blog.entry entry.id as comment_count %}
+								<li class="comments">
+								{% if entry.enable_comments %}
+								{% if comment_count %}<a href="{{ entry.get_absolute_url }}#comments_content">{{ comment_count|apnumber|capfirst }} comment{{ comment_count|pluralize }}</a>{% else %}No comments{% endif %}
+								{% else %}
+								Comments are closed for this entry
+								{% endif %}
+								</li>
+							</ul>
+						</li>
+					{% endfor %}
+					</ul>
+					{% endcache %}
+				{% endblock %}
+				
+				{% block secondary_content %}
+					<h2>About me</h2>
+					<div id="bio_intro">
+						<h3>Hi. I'm Patrick Beeson.</h3>
+						<p>I'm the director of digital communications for <a href="http://www.wfu.edu">Wake Forest University</a> in Winston-Salem, NC. I'm an avid cyclist, homebrewer, Web designer/developer, journalist and blogger.</p>
+						<p>And I enjoy finding innovative ways to enable a more informed public.</p>
+						<p>Want to learn more? Read about my <a href="/about/">background</a>, view my <a href="/resume/" title="My resume">resumé</a>, or <a href="/contact/">send me a message</a>.</p>
+					</div>
+					<div id="bio_extra">
+						<img src="http://media.patrickbeeson.com/images/patrickbeeson_mug.jpg" width="127" height="144" alt="Patrick Beeson" />
+						<ul>
+							<li><a href="http://www.linkedin.com/in/patrickbeeson" title="My LinkedIn profile">LinkedIn profile</a></li>
+							<li><a href="https://plus.google.com/109346761978820355163/posts?hl=en" title="My Google + profile">Google + profile</a></li>
+							<li><a href="http://www.facebook.com/patrickbeeson" title="My Facebook profile">Facebook profile</a></li>
+							<li><a href="http://twitter.com/patrickbeeson" title="My Twitter profile">Twitter profile</a></li>
+						</ul>
+					</div>
+					<div id="archive_content"><!--Begin archive_content-->
+						<h2>Archives and syndication</h2>
+						<h3>Tags</h3>
+						{% cache 500 home_taglist %}
+						{% get_blog_tags as tag_list %}
+						<ul>
+						{% for tag in tag_list %}
+							<li><a href="{{ tag.get_absolute_url }}" title="{{ tag.description }}">{{ tag.title }}</a></li>
+						{% endfor %}
+						</ul>
+						{% endcache %}
+						<h3>Date</h3>
+						{% cache 500 home_monthlist %}
+						{% get_month_list %}
+						<ul>
+						{% for month in blog_months reversed %}
+							<li><a href="/blog/{{ month|date:"Y/M"|lower }}/" title=" Entry archive for {{ month|date:"N Y" }}">{{ month|date:"N Y" }}</a></li>
+						{% endfor %}
+						</ul>
+						{% endcache %}
+						<h3><abbr title="really simple syndication">RSS</abbr></h3>
+						<p class="rss"><a href="/feeds/blog/">Subscribe to this blog's feed</a></p>
+						<p class="rss"><a href="/feeds/comments/">Subscribe to the feed for comments on this blog</a></p>
+				</div><!--End archive_content-->
+				
+				<div id="adsense_bigbox">
+					<h2>Advertisement</h2>
+					<h3>Note about ads</h3>
+					<p>You may report questionable or offensive ads by using <a href="/contact/" title="Contact form for patrickbeeson.com">the contact form</a>.</p>
+					<script><!--
+						google_ad_client = "pub-3760747937530921";
+						/* Homepage 336x280 */
+						google_ad_slot = "6955120795";
+						google_ad_width = 336;
+						google_ad_height = 280;
+						//-->
+					</script>
+					<script src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+				</div>
+			{% endblock %}

@@ -1,0 +1,15 @@
+<div class="latest_flickr_photo">
+{% for image in feed.entries|slice:"1" %}
+	{{ image.description|safe }}
+{% endfor %}
+</div>
+
+	{% comment %}
+	<p>{{ image.title }}</p>
+	<a href="{{ image.link }}">
+	{% for enclosure in image.enclosures %}
+		<img src="{{ enclosure.href }}" />
+	{% endfor %}
+	</a>
+	<!--This pulls out an individual image from the feed-->
+	{% endcomment %}

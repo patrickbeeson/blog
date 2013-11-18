@@ -1,0 +1,9 @@
+# /robots.txt file for http://patrickbeeson.com/
+# Contact patrickbeeson@gmail.com
+
+User-agent: *
+Disallow: /comments/postfree/
+Disallow: /comments/posted/
+Disallow: /comments/post/
+Disallow: /r/
+Disallow: /short/

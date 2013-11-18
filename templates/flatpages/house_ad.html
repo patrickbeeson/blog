@@ -1,0 +1,20 @@
+{% extends "base_flatpage.html" %}
+
+{% load markup %}
+
+{% block title %}{{ flatpage.title }}{{ block.super }}{% endblock %}
+
+{% block main_content %}
+	<h2>{{ flatpage.title }}</h2>
+	<div id="flatpage_body">
+		<p><strong>Update: SOLD!</strong></p>
+		<p>My wife Lindsay and I lived in Knoxville from 2007 to 2010. During that time, we purchased <a href="http://public.kaarmls.com/property/view.asp?MLSID=798764&srURL=%2Fproperty%2FsearchResults%2Easp%3Fpt%3D1%26K_HSN%3D4105%26K_STR%3DFulton&">a fantastic house in Fountain City</a>, just north of downtown Knoxville.</p>
+		<div id="entry_image">
+    		<img src="https://s3.amazonaws.com/media.patrickbeeson.com/images/photos/fulton_house_262_155.jpg" width="262" height="155" alt="4105 Fulton Drive Knoxville, TN 37918">
+    		<p>The front of our house for sale in the Fountain City neighborhood of Knoxville, TN.</p>
+    	</div>
+		{{ flatpage.content|markdown:"safe" }}
+	</div>
+	
+	
+{% endblock %}

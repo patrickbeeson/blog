@@ -1,0 +1,49 @@
+{% extends "base_flatpage.html" %}
+
+{% block title %}{{ flatpage.title }}{{ block.super }}{% endblock %}
+
+{% load markup %}
+
+{% block main_content %}
+	<h2>{{ flatpage.title }}</h2>
+	<div id="flatpage_body">
+		{{ flatpage.content|markdown:"safe" }}
+	</div>
+{% endblock %}
+
+{% block secondary_content %}
+<h2>Related information</h2>
+<ul id="related_content">
+	<li>
+		<h3>Resume</h3>
+		<p><a href="http://media.patrickbeeson.com/files/patrick_beeson_resume.pdf">Download my resume in PDF format</a> or <a href="http://patrickbeeson.com/resume/">view the HTML version</a></p>
+	</li>
+	<!--<li>
+		<h3>Portfolio</h3>
+		<p>My portfolio contains work I've done in Web design and journalism.</p>
+	</li>-->
+	<li>
+		<h3>Associations</h3>
+		<p>I currently belong to the following organizations:</p>
+		<ul>
+			<li><a href="http://www.alumni.appstate.edu/" title="Appalachian State University Alumni Association">Appalachian State University Alumni Association</a></li>
+			<li><a href="http://www.asucom.appstate.edu/alumni/ac.html" title="Appalachian State University Department of Communications Alumni Council">Appalachian State University Department of Communications Alumni Council</a></li>
+			<li><a href="http://ua.edu/alumni.html" title="University of Alabama Alumni Association">University of Alabama Alumni Association</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Badges</h3>
+		<p>My blog is aggregated on the following Web sites:</p>
+		<ul>
+			<li>
+				<a href="http://knoxd.com/" title="Listed on Knox'd"><img src="http://media.patrickbeeson.com/images/knoxd_logo_green.gif" width="250" height="73" alt="Listed on Knox'd" /></a>
+				<p>Knox'd: The latest headlines from the best of Knoxville.</p>
+			</li>
+			<li>
+				<a href="http://www.djangoproject.com/"><img src="https://www.djangoproject.com/s/img/badges/djangopowered126x54.gif" border="0" alt="Powered by Django." title="Powered by Django." /></a>
+				<p>Django Community Aggregator: The latest blog entries from people writing about Django.</p>
+			</li>
+		</ul>
+	</li>
+</ul>
+{% endblock %}

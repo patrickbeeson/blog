@@ -1,0 +1,21 @@
+{% extends "base_contact.html" %}
+
+{% block  title %}Contact Patrick Beeson{{ block.super }}{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="http://media.patrickbeeson.com/js/addLoadEvent.js"></script>	
+<script src="http://media.patrickbeeson.com/js/contactForm.js"></script>
+{% endblock %}
+
+{% block page_type %}contact{% endblock %}
+
+{% block main_content %}
+	<h2>Contact</h2>
+	<form method="post" action="" id="contactform">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<p id="submit_comment"><input type="submit" value="Send message" /></p>
+	</form>
+{% endblock %}
+

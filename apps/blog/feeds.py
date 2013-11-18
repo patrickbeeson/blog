@@ -15,7 +15,7 @@ class BlogEntryFeed(Feed):
 	title_template = 'feeds/blog_title.html'
 	title = "%s | The blog of Patrick Beeson" % current_site.name
 	link = "http://patrickbeeson.com/"
-	description = "Patrick Beeson is a 20-something project manager for E.W. Scripps Interactive Newspaper Group in Knoxville, TN. He's an avid cyclist, Web designer, journalist and blogger. And he wants to save the newspapers."
+	description = "I'm the director of digital communications for Wake Forest University in Winston-Salem, NC. I'm an avid cyclist, homebrewer, Web designer/developer, journalist and blogger."
 
 	def items(self):
 		return Entry.objects.filter(status=3, pub_date__lte=datetime.datetime.now())[:10]
@@ -47,8 +47,6 @@ class LatestEntriesByTag(Feed):
 		return Entry.objects.filter(tags__slug__exact=obj.slug, status=3).order_by('-pub_date')[:10]
 
 class CommentsForEntry(Feed):
-	#description_template = 'feeds/commentsforentry_description.html'
-	#title_template = 'feeds/commentsforentry_title.html'
 	def get_object(self, request, slug):
 		return get_object_or_404(Entry, slug=slug)
 	

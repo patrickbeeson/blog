@@ -1,0 +1,104 @@
+{% extends "base_comment.html" %}
+
+{% block page_type %}comment_preview{% endblock %}
+
+{% block title %}Preview your comment{{ block.super }}{% endblock %}
+
+{% block meta_description %}Patrick Beeson is a communication technologist specializing in content strategy and Web development in Roanoke, VA.{% endblock %}
+{% block meta_keywords %}Beason, Beson, journalism, new media, Virginia Tech Carilion Research Institute, cycling, cyclocross, Web design, Web development, Web standards, Django, Python, media, newspapers, public relations, communications, homebrew, beer, brewing{% endblock %}
+
+{% load comments markup cache feeds %}
+
+{% block main_content %}
+{% if form.errors %}
+<h2>Comment error</h2>
+<div class="entry">
+	<div id="entry_body">
+		<p>You need to correct some errors before your comment can be submitted. Please return to the entry and try again.</p>
+	</div>
+</div>
+{% else %}
+<h2>Preview your comment</h2>
+<div id="comments">
+    <ul id="comments_content">
+    	<li class="{% ifequal comment.user_name 'Patrick Beeson' %}author_comment{% else %}comment{% endifequal %}" id="comment-{{ comment.id }}">
+			<div class="comment_body">
+				{{ comment|markdown:"safe"|urlizetrunc:"40" }}
+			</div>
+			<ul class="comment_meta">
+			{% comment %}
+				<li class="byline">{% if comment.user_url %}<a href="{{ comment.user_url }}">{{ comment.user_name }}</a>{% else %}{{ comment.user_name }}{% endif %}</li>
+				<li class="date">{{ comment.submit_date|date:"N W, Y" }}</li>
+				<li class="time">{{ comment.submit_date|date:"f a" }}</li>
+				<li class="permalink"><a href="#comment-{{ comment.id }}" title="Permalink to this comment">Permalink</a></li>
+			{% endcomment %}
+			</ul>
+			
+		</li>
+    </ul>
+	<div id="comments_open">
+    	<h2>Revise your comment</h2>
+    	<p id="comment_policy">Please use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax for formatting. No <abbr title="hypertext markup language">HTML</abbr> is allowed.By using this comment form, it's assumed that you agree with the terms of <a href="http://patrickbeeson.com/about/comments/">my comment policy</a>.</p>
+		<form action="{% comment_form_target %}" method="POST">{% csrf_token %}
+		{% for field in form %}
+			{% if field.is_hidden %}
+				{{ field }}
+			{% else %}
+        	<p
+			{% if field.errors %} class="error"{% endif %}
+			{% ifequal field.name "honeypot" %} style="display:none;"{% endifequal %}>
+			{% if field.errors %}{{ field.errors }}{% endif %}
+			{{ field.label_tag }} {{ field }}
+			</p>
+			{% endif %}
+		{% endfor %}
+		<p class="submit">
+			<input type="submit" name="submit" class="submit-post" value="Post">
+			<input type="submit" name="submit" class="submit-preview" value="Preview">
+		</p>
+    	</form>
+    	{% comment %}
+    	<form action="../postfree/" method="post">
+    		<p><label for="id_person_name">Your name:</label>
+    		<input type="text" id="id_person_name" name="person_name" value="{{ comment.person_name|escape }}" /></p>
+			<p><label for="id_comment">Comment:</label><br /><textarea name="comment" id="id_comment" rows="10" cols="60">{{ comment.comment }}</textarea></p>
+			<input type="hidden" name="options" value="{{ options }}" />
+			<input type="hidden" name="target" value="{{ target }}" />
+			<input type="hidden" name="gonzo" value="{{ hash }}" />
+			<div id="preview_form_submit">
+				<p id="preview_comment"><input type="submit" name="preview" value="Preview comment" /></p>
+				<p id="submit_comment"><input type="submit" name="post" value="Post comment" /></p>
+			</div>
+		</form>
+		{% endcomment %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block external_content %}
+	<div id="author_meta">
+		<h2>Author details</h2>
+		<img src="http://media.patrickbeeson.com/images/patrickbeeson_mug.jpg" width="127" height="144" alt="Patrick Beeson" />
+		<ul>
+			<li>Name: Patrick Beeson</li>
+			<li>Occupation: Webmaster, <a href="http://vtc.vt.edu.com" title="Virginia Tech Carilion Research Institute">Virginia Tech Carilion Research Institute</a></li>
+			<li>Location: <a href="http://www.roanokeva.gov/" title="More information about Roanoke, VA">Roanoke, VA</a></li>	
+		</ul>
+		<p>Want to learn more? Visit my <a href="/about/">about section</a> or <a href="/contact/">send me a message</a>.</p>
+	</div>
+	<div id="delicious_links">
+					<h2>Latest bookmarks on Pinboard</h2>
+					{% cache 5000 pinboard_feed %}
+					{% include_feed "http://feeds.pinboard.in/rss/secret:a60a6021a141d635e6d8/u:patrickbeeson/" 10 feed_includes/latest_delicious.html %}
+					{% endcache %}
+		
+	</div>
+	<div id="flickr_photo">
+		<h2>Latest photo on Flickr</h2>
+		{% cache 3600 flickr_feed %}
+		{% include_feed "http://api.flickr.com/services/feeds/photos_public.gne?id=51035748274@N01&amp;lang=en-us&amp;format=rss_200" 1 feed_includes/latest_flickrphoto.html %}
+		{% endcache %}
+		
+	</div>
+{% endblock %}

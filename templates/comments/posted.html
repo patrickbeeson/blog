@@ -1,0 +1,43 @@
+{% extends "base_comment.html" %}
+
+{% block page_type %}comment_posted{% endblock %}
+
+{% block title %}Your comment has been posted{{ block.super }}{% endblock %}
+
+{% block meta_description %}Patrick Beeson is a 20-something project manager for E.W. Scripps Interactive Newspaper Group in Knoxville, TN. He's an avid cyclist, Web designer, journalist and blogger. And he wants to save the newspapers.{% endblock %}
+{% block meta_keywords %}Beason, Beson, journalism, new media, Scripps, cycling, cyclocross, Web design, Web development, Web standards{% endblock %}
+
+{% load comments markup feeds cache %}
+
+{% block main_content %}
+<h2>Your comment has been posted</h2>
+	<p><a href="{{ comment.get_content_object_url }}#comment-{{ comment.id }}">View your comment</a> on the entry "{{ comment.content_object }}."</p>
+	<p>Please allow a few minutes before the comment is published.</p>
+{% endblock %}
+
+{% block external_content %}
+	<div id="author_meta">
+		<h2>Author details</h2>
+		<img src="http://media.patrickbeeson.com/images/patrickbeeson_mug.jpg" width="127" height="144" alt="Patrick Beeson" />
+		<ul>
+			<li>Name: Patrick Beeson</li>
+			<li>Occupation: Webmaster, <a href="http://vtc.vt.edu.com" title="Virginia Tech Carilion Research Institute">Virginia Tech Carilion Research Institute</a></li>
+			<li>Location: <a href="http://www.roanokeva.gov/" title="More information about Roanoke, VA">Roanoke, VA</a></li>	
+		</ul>
+		<p>Want to learn more? Visit my <a href="/about/">about section</a> or <a href="/contact/">send me a message</a>.</p>
+	</div>
+	<div id="delicious_links">
+					<h2>Latest bookmarks on Pinboard</h2>
+					{% cache 5000 pinboard_feed %}
+					{% include_feed "http://feeds.pinboard.in/rss/secret:a60a6021a141d635e6d8/u:patrickbeeson/" 10 feed_includes/latest_delicious.html %}
+					{% endcache %}
+		
+	</div>
+	<div id="flickr_photo">
+		<h2>Latest photo on Flickr</h2>
+		{% cache 3600 flickr_feed %}
+		{% include_feed "http://api.flickr.com/services/feeds/photos_public.gne?id=51035748274@N01&amp;lang=en-us&amp;format=rss_200" 1 feed_includes/latest_flickrphoto.html %}
+		{% endcache %}
+		
+	</div>
+{% endblock %}

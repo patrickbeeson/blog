@@ -1,0 +1,78 @@
+{% extends "base_blog.html" %}
+
+{% block title %}Blog archives{{ block.super }}{% endblock %}
+
+{% block page_type %}archive{% endblock %}
+
+{% load comments markup humanize blog cache %}
+
+{% block main_content %}
+	<h2>Entry archive</h2>
+	
+	<ul id="entry_list">
+		{% cache 500 archive_entrylist next previous %}
+		{% for entry in object_list %}
+		<li class="entry" id="entry-{{ entry.id }}">
+			<h3><a href="{{ entry.get_absolute_url }}" title="{{ entry.title }}">{{ entry.title }}</a></h3>
+			<div class="entry_body">
+				{{ entry.meta_description|markdown:"safe" }}
+			</div>
+			<ul class="entry_meta">
+				<li class="byline">{{ entry.author.get_full_name }}</li>
+				<li class="date">{{ entry.pub_date|date:"N j, Y" }}</li>
+				<li class="time">{{ entry.pub_date|date:"f a" }}</li>
+				{% get_comment_count for blog.entry entry.id as comment_count %}
+				<li class="comments">
+				{% if entry.enable_comments %}
+				{% if comment_count %}<a href="{{ entry.get_absolute_url }}#comments">{{ comment_count|apnumber|capfirst }} comment{{ comment_count|pluralize }}</a>{% else %}No comments{% endif %}
+				{% else %}
+				Comments are closed for this entry
+				{% endif %}
+				</li>
+			</ul>
+		</li>
+		{% endfor %}
+		{% endcache %}
+	</ul>
+
+	{% if is_paginated %}
+	<p id="pagination">
+    	{% if has_next %}
+    	<a href="?page={{ next }}">&laquo; Older entries</a>
+    	{% endif %}
+    	{% if has_next and has_previous %} | {% endif %}
+    	{% if has_previous %}
+    	<a href="?page={{ previous }}">Newer entries &raquo;</a>
+    	{% endif %}
+	</p>
+	{% endif %}
+
+{% endblock %}
+
+{% block secondary_content %}
+<h2>Archives by date</h2>
+<ul id="entry_details">
+	<li>
+		<h3>Monthly archives</h3>
+		{% cache 500 archive_entry_monthlist %}
+		{% get_month_list %}
+		<ul>
+		{% for month in blog_months reversed %}
+			<li><a href="/blog/{{ month|date:"Y/M"|lower }}/" title="Entry archive for {{ month|date:"F Y" }}">{{ month|date:"F Y" }}</a></li>
+		{% endfor %}
+		</ul>
+		{% endcache %}
+	</li>
+	<li>
+		<h3>Yearly archives</h3>
+		{% cache 500 archive_entry_yearlist %}
+		{% get_year_list %}
+		<ul>
+		{% for year in blog_years reversed %}
+			<li><a href="/blog/{{ year|date:"Y"|lower }}/" title="{{ year|date:"Y" }}">{{ year|date:"Y" }}</a></li>
+		{% endfor %}
+		</ul>
+		{% endcache %}
+	</li>
+</ul>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base_flatpage.html" %}
+
+{% load markup %}
+
+{% block title %}{{ flatpage.title }}{{ block.super }}{% endblock %}
+
+{% block main_content %}
+	<h2>{{ flatpage.title }}</h2>
+	<div id="flatpage_body">
+		{{ flatpage.content|markdown:"safe" }}
+		<iframe width='338' height='300' frameborder='0' src='https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0An2tURIbYocgdEI5TEliUC1QYXUwMHVGaUFuOVFWT2c&output=html&widget=true'></iframe>
+	</div>
+{% endblock %}

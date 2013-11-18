@@ -1,0 +1,22 @@
+{% extends "base_blog.html" %}
+
+{% load cache %}
+
+{% block title %}Blog entries for {{ day|date:"l, F W Y" }}{{ block.super }}{% endblock %}
+
+{% block page_type %}archive{% endblock %}
+
+{% block main_content %}
+	<h2>Archive for {{ day|date:"l, F W" }}</h2>
+	
+	<section class="archive_group">
+		<h3>Entries</h3>
+		<ul class="archive_list">
+		{% cache 500 day_archive day %}
+		{% for entry in object_list %}
+			<li><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></li>
+		{% endfor %}
+		{% endcache %}
+		</ul>
+	</section>
+{% endblock %}

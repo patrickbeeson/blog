@@ -1,4 +1,3 @@
-#from django.contrib import admin
 from django.db import models
 import datetime
 
@@ -21,10 +20,3 @@ class Photo(models.Model):
 
 	def get_absolute_url(self):
 		return '/photo/%s/%s/' % (self.pub_date.strftime('%Y/%b/%d').lower(), self.slug)
-
-#class PhotoAdmin(admin.ModelAdmin):
-#	prepopulated_fields = {"slug": ("title",)}
-#	list_display = ('title', 'slug')
-#	search_fields = ('title', 'caption')
-
-#admin.site.register(Photo, PhotoAdmin)

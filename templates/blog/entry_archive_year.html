@@ -1,0 +1,26 @@
+{% extends "base_blog.html" %}
+
+{% load cache comments %}
+
+{% block title %}Months with blog entries in {{ year }}{{ block.super }}{% endblock %}
+
+{% block page_type %}archive{% endblock %}
+
+{% block main_content %}
+	<h2>Archive for {{ year }}</h2>
+	
+{% cache 500 archive_year year %}	
+{% regroup object_list by pub_date|date:"F" as month_list %}
+{% for month in month_list %}
+<section class="archive_group">
+		<h3>{{ month.grouper }} entries</h3>
+		<ul class="archive_list">
+		{% for entry in month.list %}
+			<li><a href="{{ entry.get_absolute_url }}" title="{{ entry.title }}">{{ entry.title }}</a></li>
+		{% endfor %}
+		</ul>
+</section>
+{% endfor %}
+{% endcache %}
+
+{% endblock %}

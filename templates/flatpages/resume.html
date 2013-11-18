@@ -1,0 +1,48 @@
+{% extends "base_flatpage.html" %}
+
+{% block title %}{{ flatpage.title }}{{ block.super }}{% endblock %}
+
+{% block main_content %}
+	<h2>{{ flatpage.title }}</h2>
+	<div id="flatpage_body" class="resume">
+		{{ flatpage.content }}
+	</div>
+{% endblock %}
+
+{% block secondary_content %}
+<h2>Related information</h2>
+<ul id="related_content">
+	<li>
+		<h3>Published stories (Master's project)</h3>
+		<ul>
+			<li><a href="https://docs.google.com/leaf?id=0B32tURIbYocgYTViNDI1Y2YtOTM1MS00MjQwLWJmMTQtNTQ5YmQ0OTJmZTcz&hl=en">Quill: Blogging: What is it and how has it affected the media?</a></li>
+			<li><a href="https://docs.google.com/leaf?id=0B32tURIbYocgNzgyYThlMGEtZTVjZC00MDQxLWE0MDMtYTNhYzlmZjBmMDFk&hl=en">Quill: The ethical dilemma of blogging in the media</a></li>
+			<li><a href="https://docs.google.com/leaf?id=0B32tURIbYocgYTRlN2M3MWMtOGJkMi00M2I4LThkNzMtMTg0NmU5YTdhYjcx&hl=en">Quill: Bringing blogs into the classroom</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Web projects</h3>
+		<ul>
+			<li><a href="http://research.vtc.vt.edu">Virginia Tech Carilion Research Institute</a></li>
+			<li><a href="http://knoxd.com">Knox'd. The latest headlines from the best of Knoxville</a></li>
+			<li><a href="http://ypknox.com">Young Professionals of Knoxville</a></li>
+			<li><a href="http://theplumbaker.com">The Plum Baker</a></li>
+			<li><a href="http://www.roanoke.com/sports/homestand/">Homestand project from The Roanoke Times/roanoke.com</a></li>
+			<li><a href="http://www.roanoke.com/jordanswar/intro/intro.html">Jordan's War project from The Roanoke Times/roanoke.com</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Resumé</h3>
+		<ul>
+			<li><a href="http://media.patrickbeeson.com/files/patrick_beeson_resume_11182013.pdf">Download my resumé in PDF format</a></li>
+			<li><a href="http://www.linkedin.com/in/patrickbeeson">View my LinkedIn profile</a></li>
+		</ul>
+	</li>
+	<li>
+		<h3>Board and steering-committee memberships</h3>
+		<ul>
+			<li><a href="http://www.asucom.appstate.edu/alumni/ac.html" title="Appalachian State University Department of Communications Alumni Council">Appalachian State University Department of Communications Alumni Council</a></li>
+		</ul>
+	</li>
+</ul>
+{% endblock %}

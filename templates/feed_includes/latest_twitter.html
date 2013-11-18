@@ -1,0 +1,7 @@
+{% if items %}
+{% for entry in items %}
+<p>{{ entry.title|urlize }} <a href="{{ entry.link }}" title="{{ entry.title }}">#</a></p>
+{% endfor %}
+{% else %}
+<p>My Twitter feed isn't available</p>
+{% endif %}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml">
+	<head>
+		<title>{% block title %}patrickbeeson.com | Patrick Beeson is a communication technologist specializing in content strategy and Web development in Winston-Salem, NC.{% endblock %}</title>
+		<link href="http://media.patrickbeeson.com/images/favicon.ico" rel="icon" type="image/x-icon">
+		<meta charset="UTF-8">
+		<meta name="description" content="{% block meta_description %}Patrick Beeson is a communication technologist specializing in content strategy and Web development in Winston-Salem, NC.{% endblock %}">
+		<meta name="keywords" content="{% block meta_keywords %}Beason, Beson, journalism, new media, cycling, cyclocross, Web design, Web development, Web standards, Django, Python, media, newspapers, public relations, communications, homebrew, beer, brewing{% endblock %}">
+		{% block meta_source_attribution %}
+		{% endblock %}
+		{% block facebook_meta_data %}
+		<meta property="fb:admins" content="27403640">
+		<meta property="fb:app_id" content="128762500483273">
+		{% endblock %}
+		<meta name="y_key" content="977b6969d33b47f5">
+		
+		{% block revcanonical %}{% endblock %}
+		
+		{% block meta_robots %}{% endblock %}
+		
+		{% block google_verify %}{% endblock %}
+		
+		{% block css %}
+		<link rel="stylesheet" href="http://media.patrickbeeson.com/css/styles.css">
+		{% endblock %}
+		
+		{% block ie_css %}
+		<!--[if IE]>
+			<link rel="stylesheet" href="http://media.patrickbeeson.com/css/ie.css">
+		<![endif]-->
+		{% endblock %}
+		
+		{% block javascript %}
+		<script src="http://media.patrickbeeson.com/js/modernizr-1.5.min.js"></script>
+		{% endblock %}
+		
+		{% block rss %}
+		<link rel="alternate" type="application/rss+xml" title="RSS for all blog entries" href="/feeds/blog/">
+		{% endblock %}
+
+	</head>
+	<body id="{% block page_type %}{% endblock %}">
+		<div id="wrap"><!--Begin wrap-->
+			<header id="branding"><!--Begin branding-->
+				<h1 id="logo"><a href="/" title="Patrick Beeson is a communication technologist specializing in content strategy and Web development in Roanoke, VA.">Patrick Beeson</a></h1>
+			</header><!--End branding-->
+			
+			<nav><!--Begin navigation-->
+				<ul>
+					<li id="home_page"><a href="/" title="Home">Home</a></li>
+					<li id="biography"><a href="/about/" title="Learn more about Patrick Beeson">About</a></li>
+					<li id="blog_archive"><a href="/blog/archive/" title="View the archives">Archives</a></li>
+					<li id="contact_form"><a href="/contact/" title="Send Patrick Beeson a message">Contact</a></li>
+					<li id="search">
+						<form method="get" action="/blog/search/" id="search_form">
+							<fieldset>
+								<label for="search" accesskey="4">Search:</label>
+								<input type="search" name="q" value="{{ search_term }}" id="search_field" size="20" placeholder="Django blog spam">
+      							<input type="submit" value="Go">
+							</fieldset>
+						</form>
+					</li>
+				</ul>
+			</nav><!--End navigation-->
+			
+			<section id="content"><!--Begin content-->
+				<section id="main_content"><!--Begin main content-->
+				{% block main_content %}
+				{% endblock %}
+				</section><!--End main content-->
+			
+				<section id="secondary_content"><!--Begin secondary_content-->
+				{% block secondary_content %}
+				{% endblock %}
+				</section><!--End secondary_content-->
+				
+				<section id="external_content"><!--Begin external_content-->
+				{% block external_content %}
+				<aside id="book_review">
+				{% comment %}
+					<h2>Currently reading</h2>
+					<img src="http://media.patrickbeeson.com/images/omnivores_dilemma_cvr.jpg" width="175" height="91" alt="The Omnivore’s Dilemma" />
+					<h3><a href="http://www.amazon.com/gp/product/0143038583?ie=UTF8&tag=wwwmichaelpol-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0143038583" title="The Omnivore’s Dilemma">"The Omnivore’s Dilemma" by Michael Pollan</a></h3>
+					<p>In this groundbreaking book, one of America’s most fascinating, original, and elegant writers turns his own omnivorous mind to the seemingly straightforward question of what we should have for dinner.</p>
+				{% endcomment %}
+				</aside>
+				
+				{% load feeds %}
+				{% load cache %}
+				
+				<aside id="delicious_links">
+					<h2>Latest bookmarks on Pinboard</h2>
+					{% comment %}
+					<ul>
+						<li><a href="http://pinboard.in/u:patrickbeeson">My Pinboard bookmarks</a> are currently unavailable.</li>
+					</ul>
+					{% endcomment %}
+					{% cache 5000 pinboard_feed %}
+					{% include_feed "http://feeds.pinboard.in/rss/secret:a60a6021a141d635e6d8/u:patrickbeeson/" 10 feed_includes/latest_delicious.html %}
+					{% endcache %}
+					
+				</aside>
+				<aside id="flickr_photo">
+					<h2>Latest photo on Flickr</h2>
+					{% cache 3600 flickr_feed %}
+					{% include_feed "http://api.flickr.com/services/feeds/photos_public.gne?id=51035748274@N01&amp;lang=en-us&amp;format=rss_200" 1 feed_includes/latest_flickrphoto.html %}
+					{% endcache %}
+					
+					{% comment %}
+					<h2>Latest update on Twitter</h2>
+					{% cache 3600 twitter_feed %}
+					{% include_feed "http://twitter.com/statuses/user_timeline/12510.rss" 1 feed_includes/latest_twitter.html %}
+					{% endcache %}
+					{% endcomment %}
+					
+				</aside>
+				
+				{% endblock %}
+				</section><!--End external content-->
+			</section><!--End content-->
+		</div><!--End wrap-->
+		<footer id="site_info"><!--Begin site_info-->
+			<h2>Colophon and copyright</h2>
+			<p>Copyright &copy; {% now "Y" %} Patrick Beeson. All rights reserved.</p>
+			<p>This site is published using <a href="http://www.djangoproject.com/">Django</a>, and hosted by <a href="http://www.webfaction.com?affiliate=pbeeson">WebFaction</a> and <a href="http://patrickbeeson.com/blog/2008/may/13/using-amazon-s3-django/" title="Using Amazon S3 with Django">Amazon S3</a>.</p>
+		</footer><!--End site_info-->
+	{% block google_analytics %}
+	<script src="http://www.google-analytics.com/urchin.js"></script>
+	<script>
+	_uacct = "UA-207270-6";
+	urchinTracker();
+	</script>
+	{% endblock %}
+	{% block facebook_js_sdk %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,9 @@
+{{ obj.summary_html|safe }}
+{% if obj.centerpiece_image %}
+<img src="http://media.patrickbeeson.com/{{ obj.centerpiece_image.photo }}" width="{{ obj.centerpiece_image.photo_width }}" height="{{ obj.centerpiece_image.photo_height }}" alt=" {{ obj.centerpiece_image.caption }}" />
+<p>{{ obj.centerpiece_image.caption }}</p>
+{% if obj.centerpiece_image.credit %}
+<p>Credit: {% if obj.centerpiece_image.flickr_url %}<a href="{{ obj.centerpiece_image.flickr_url }}" title="See this photo elsewhere">{{ obj.centerpiece_image.credit }}</a>{% else %}{{ obj.centerpiece_image.credit }}{% endif %}</p>
+{% endif %}
+{% endif %}
+{{ obj.body_html|safe }}

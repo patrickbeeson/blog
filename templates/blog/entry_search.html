@@ -1,0 +1,52 @@
+{% extends "base_blog.html" %}
+
+{% block title %}{% if object_list %}Search results for '{{ search_term }}'{% else %}No search results found for '{{ search_term }}'{% endif %}{{ block.super }}{% endblock %}
+
+{% block page_type %}search_results{% endblock %}
+
+{% load comments markup humanize cache %}
+
+{% block main_content %}
+	{% if object_list %}
+	<h2>Search results for "{{ search_term }}"</h2>
+	{% else %}
+	<h2>No search results found for "{{ search_term }}"</h2>
+	{% endif %}
+	
+	{% if message %}
+	<p class="message">{{ message }}</p>
+	{% endif %}
+	
+	{% if object_list %}
+	<ul id="search_results">
+		{% cache 500 search_results search_term %}
+		{% for entry in object_list %}
+		{% ifequal entry.status 3 %}
+		<li class="entry" id="entry-{{ entry.id }}">
+			<h3><a href="{{ entry.get_absolute_url }}" title="{{ entry.title }}">{{ entry.title }}</a></h3>
+			<div class="entry_body">
+				{{ entry.meta_description|markdown:"safe" }}
+			</div>
+			<ul class="entry_meta">
+				<li class="byline">{{ entry.author.get_full_name }}</li>
+				<li class="date">{{ entry.pub_date|date:"N j, Y" }}</li>
+				<li class="time">{{ entry.pub_date|date:"f a" }}</li>
+				{% get_comment_count for blog.entry entry.id as comment_count %}
+				<li class="comments">
+				{% if entry.enable_comments %}
+				{% if comment_count %}<a href="{{ entry.get_absolute_url }}#comments">{{ comment_count|apnumber|capfirst }} comment{{ comment_count|pluralize }}</a>{% else %}No comments{% endif %}
+				{% else %}
+				Comments are closed for this entry
+				{% endif %}
+				</li>
+			</ul>
+		</li>
+		{% endifequal %}
+		{% endfor %}
+		{% endcache %}
+	</ul>
+	{% else %}
+	<p id="no_search_results">There are no search results that match your query. <a href="/blog/archive/">Try looking in the entry archives</a>, or simply enter another search.</p>
+	{% endif %}
+
+{% endblock %}

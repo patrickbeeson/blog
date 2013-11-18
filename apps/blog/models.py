@@ -1,5 +1,4 @@
 import datetime
-#from django.contrib import admin
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.sitemaps import ping_google
@@ -42,10 +41,6 @@ class Tag(models.Model):
 	def get_absolute_url(self):
 		return '/blog/tags/%s/' % (self.slug)
 
-#class TagAdmin(admin.ModelAdmin):
-#	prepopulated_fields = {"slug": ("title",)}
-#	list_display = ('slug', 'title')
-
 class Entry(models.Model):
 	# Status options
 	CLOSED_STATUS = 1
@@ -56,6 +51,7 @@ class Entry(models.Model):
 		(EDITING_STATUS, 'Editing'),
 		(LIVE_STATUS, 'Public'),
 	)
+	
 	# Title and slug fields
 	title = models.CharField(max_length=200, help_text='This field will populate the slug field. Maximum 200 characters.')
 	slug = models.SlugField(unique_for_date='pub_date')
@@ -154,13 +150,3 @@ def moderate_comment(sender, comment, request, **kwargs):
 		mail_managers ("New comment posted", email_body % (comment.get_as_text()))
 	
 comment_was_posted.connect(moderate_comment)
-	
-#class EntryAdmin(admin.ModelAdmin):
-#	prepopulated_fields = {"slug": ("title",)}
-#	raw_id_fields = ('response_link', 'centerpiece_image')
-#	list_display = ('title', 'slug', 'pub_date', 'update', 'status')
-#	list_filter = ('status', 'tags', 'pub_date',)
-#	search_fields = ('title', 'meta_description', 'body', 'meta_keywords')	
-
-#admin.site.register(Tag, TagAdmin)
-#admin.site.register(Entry, EntryAdmin)

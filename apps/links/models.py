@@ -1,5 +1,4 @@
 from django.db import models
-#from django.contrib import admin
 
 class Link(models.Model):
 	title = models.CharField(max_length=200)
@@ -10,8 +9,3 @@ class Link(models.Model):
 		
 	def __unicode__(self):
 		return self.title
-
-#class LinkAdmin(admin.ModelAdmin):
-#	list_display = ('title', 'url')
-
-#admin.site.register(Link, LinkAdmin)

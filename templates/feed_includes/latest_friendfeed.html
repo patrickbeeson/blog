@@ -1,0 +1,10 @@
+<ul>
+{% if items %}
+{% for entry in items %}
+	<li style="background: #fff;"><a href="{{ entry.link }}" title="{{ entry.title }}">{{ entry.title }}</a></li>
+{% endfor %}
+{% else %}
+	<li>My del.icio.us feed isn't available</li>
+{% endif %}
+</ul>
+

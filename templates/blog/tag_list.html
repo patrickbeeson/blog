@@ -1,0 +1,23 @@
+{% extends "base_blog.html" %}
+
+{% load cache %}
+
+{% block title %}Tag archive{{ block.super }}{% endblock %}
+
+{% block page_type %}archive{% endblock %}
+
+{% block main_content %}
+	<h2>Tag archive</h2>
+	
+	<div class="archive_group">
+		<h3>Tags</h3>
+		<ul class="archive_list">
+		{% cache 500 archive_tag_list %}
+		{% for tag in object_list %}
+			<li><a href="{{ tag.get_absolute_url }}" title="{{ tag.title }}">{{ tag.title }}</a></li>
+		{% endfor %}
+		{% endcache %}
+		</ul>
+	</div>
+	
+{% endblock %}

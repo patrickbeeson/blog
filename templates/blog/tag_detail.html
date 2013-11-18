@@ -1,0 +1,42 @@
+{% extends "base_blog.html" %}
+
+{% load cache %}
+
+{% block title %}Blog entries tagged with '{{ tag.title}}'{{ block.super }}{% endblock %}
+
+{% block rss %}
+{{ block.super }}
+<link rel="alternate" type="application/rss+xml" title="RSS for blog entries tagged with {{ tag.slug }}" href="/feeds/tags/{{ tag.slug }}/" />
+{% endblock %}
+
+{% block page_type %}archive{% endblock %}
+
+{% block main_content %}
+	<h2>Entries tagged with "{{ tag.title }}"</h2>
+	
+	<section class="archive_group">
+		<h3>Entries</h3>
+		<ul class="archive_list">
+		{% cache 500 archive_tag tag.title %}
+		{% for entry in tag.live_entry_set.all %}
+			<li><a href="{{ entry.get_absolute_url }}" title="{{ entry.title }}">{{ entry.title }}</a></li>
+		{% endfor %}
+		{% endcache %}
+		</ul>
+	</section>
+	
+{% endblock %}
+
+{% block secondary_content %}
+<h2>Tag details</h2>
+<ul id="tag_details">
+	<li>
+		<h3>Tag description</h3>
+		{{ tag.description_html|safe }}
+	</li>
+	<li>
+		<h3>RSS</h3>
+		<p class="rss"><a href="http://patrickbeeson.com/feeds/tags/{{ tag.slug }}/" title="RSS feed for {{ tag.title }}">Subscribe to this tag's feed</a></p>
+	</li>
+</ul>
+{% endblock %}

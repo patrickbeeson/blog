@@ -1,0 +1,25 @@
+{% extends "base_blog.html" %}
+
+{% load cache %}
+
+{% block title %}Blog entries for {{ month|date:"F Y" }}{{ block.super }}{% endblock %}
+
+{% block page_type %}archive{% endblock %}
+
+{% block main_content %}
+	<h2>Archive for {{ month|date:"F Y" }}</h2>
+	{% cache 500 archive_month month %}
+	{% regroup object_list by pub_date|date:"l, N jS" as day_list %}
+	{% for day in day_list %}
+	<section class="archive_group">
+		<h3>{{ day.grouper }}</h3>
+		<ul class="archive_list">
+		{% for entry in day.list %}
+			<li><a href="{{ entry.get_absolute_url }}" title="{{ entry.title }}">{{ entry.title }}</a></li>
+		{% endfor %}
+		</ul>
+	</section>
+	{% endfor %}
+	{% endcache %}
+
+{% endblock %}

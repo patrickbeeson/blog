@@ -3,10 +3,6 @@ import time
 import optparse
 import datetime
 
-#from django.core.management import setup_environ
-#import settings
-#setup_environ(settings)
-
 def delete_spam_comments(verbose=False):
     from django.contrib.comments.models import Comment
     spam_comments = Comment.objects.filter(is_public=False)

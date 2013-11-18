@@ -1,0 +1,291 @@
+{% extends "base_blog.html" %}
+
+{% block meta_source_attribution %}
+{% comment %}{% if entry.response_link %}<meta name="syndication-source" content="{{ entry.response_link.url }}">{% endif %}{% endcomment %}
+<meta name="original-source" content="http://patrickbeeson.com{{ entry.get_absolute_url }}">
+{% endblock %}
+
+{% block facebook_meta_data %}
+<meta property="og:title" content="{{ entry.title }}">
+<meta property="og:site_name" content="patrickbeeson.com">
+{% if entry.centerpiece_image %}<meta property="og:image" content="http://media.patrickbeeson.com/{{ entry.centerpiece_image.photo }}">{% endif %}
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://patrickbeeson.com{{ entry.get_absolute_url }}">
+<meta property="og:description" content="{{ entry.meta_description }}">
+<meta property="fb:admins" content="27403640">
+<meta property="fb:app_id" content="128762500483273">
+{% endblock %}
+
+{% load blog comments generic_markup generic_content markup humanize getlinks feeds comparison cache %}
+
+{% block title %}{{ entry.title }}{{ block.super }}{% endblock %}
+
+{# block revcanonical %}{% revcanonical entry %}{% endblock #}
+
+{% block meta_description %}{{ entry.meta_description }}{% endblock %}
+{% block meta_keywords %}{{ entry.meta_keywords }}{% endblock %}
+
+{% block rss %}
+{{ block.super }}
+{% get_comment_list for blog.entry entry.id as comment_list %}
+{% if comment_list %}
+<link rel="alternate" type="application/rss+xml" title="RSS for comments on this blog entry" href="/feeds/entry-comments/{{ entry.slug }}/" />
+{% endif %}
+{% for tag in entry.tags.all %}
+<link rel="alternate" type="application/rss+xml" title="RSS for blog entries tagged with {{ tag.slug }}" href="/feeds/tags/{{ tag.slug }}/" />
+{% endfor %}
+{% endblock %}
+
+{% block page_type %}entry_detail{% endblock %}
+
+{% block main_content %}
+<article id="entry-{{ entry.id }}" class="entry">
+	<h2>{{ entry.title }}</h2>
+	<div id="entry_body">
+		{% if entry.update %}
+			<p id="entry_update">Entry updated {{ entry.update|date:"N j, Y" }} at {{ entry.update|date:"f a" }}</p>
+		{% endif %}
+		<div id="entry_summary">
+    		{{ entry.summary_html|safe }}
+    	</div>
+    	{% if entry.centerpiece_image %}
+    	<div id="entry_image">
+    		<img src="http://media.patrickbeeson.com/{{ entry.centerpiece_image.photo }}" width="{{ entry.centerpiece_image.photo_width }}" height="{{ entry.centerpiece_image.photo_height }}" alt=" {{ entry.centerpiece_image.caption }}" />
+    		<p>{{ entry.centerpiece_image.caption }}</p>
+    		{% if entry.centerpiece_image.credit %}
+    		<p>Credit: {% if entry.centerpiece_image.flickr_url %}<a href="{{ entry.centerpiece_image.flickr_url }}" title="See this photo elsewhere">{{ entry.centerpiece_image.credit }}</a>{% else %}{{ entry.centerpiece_image.credit }}{% endif %}</p>
+    		{% endif %}
+    	</div>
+    	{% endif %}
+    	<div id="more">
+    		{{ entry.body_html|safe }}
+    	</div>
+    	<div id="fb_like">
+    		<fb:like show_faces="false" width="553" font="lucida grande" autologoutlink="true"></fb:like>
+    	</div>
+    	<div id="tweet_this">
+    		<script src="http://platform.twitter.com/widgets.js"></script>
+			<div><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://patrickbeeson.com{{ entry.get_absolute_url }}" data-via="patrickbeeson" data-text="{{ entry.title }}" data-related="patrickbeeson:Communication Technologist" data-count="horizontal">Tweet</a></div>
+    	</div>
+	</div>
+</article>
+
+{% get_comment_list for blog.entry entry.id as comment_list %}
+<div id="comments"{% if not entry.enable_comments %} class="closed"{% endif %}>
+    {% get_comment_count for blog.entry entry.id as comment_count %}
+    <h2>{% if comment_count %}{% cache 500 entry_commentcount entry %}{{ comment_count|apnumber|capfirst }} comment{{ comment_count|pluralize }}{% endcache %}{% else %}No comments{% endif %}</h2>
+    {% if comment_list %}
+    <ul id="comments_content">
+    {% for comment in comment_list %}
+    	<li class="{% ifequal comment.user_name 'Patrick Beeson' %}author_comment{% else %}comment{% endifequal %}" id="c{{ comment.id }}">
+			<div class="comment_body">
+				{% ifequal comment.user_name 'Patrick Beeson' %}
+				{{ comment.comment|markdown:"safe"|urlizetrunc:"40" }}
+				{% else %}
+				{{ comment.comment|markdown:"safe"|urlizetrunc:"40" }}
+				{% endifequal %}
+			</div>
+			<ul class="comment_meta">
+				<li class="byline">{% if comment.user_url %}<a href="{{ comment.user_url }}">{{ comment.user_name }}</a>{% else %}{{ comment.user_name }}{% endif %}</li>
+				<li class="date">{{ comment.submit_date|date:"N j, Y" }}</li>
+				<li class="time">{{ comment.submit_date|date:"f a" }}</li>
+				<li class="permalink"><a href="#c{{ comment.id }}" title="Permalink to this comment">Permalink</a></li>
+				{% comment %}<li class="short_url">Short URL: <a href="{% shorturl comment %}">{% shorturl comment %}</a></li>{% endcomment %}
+			</ul>
+		</li>
+	{% endfor %}
+    </ul>
+    {% endif %}
+    
+	{% if entry.enable_comments %}
+		{% if entry.comments_expired %}
+		<div id="comments_open">
+    		<h2>Post a comment</h2>
+    		<p id="comment_policy">Please use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax for formatting. No <abbr title="hypertext markup language">HTML</abbr> is allowed. By using this comment form, it's assumed that you agree with the terms of <a href="http://patrickbeeson.com/about/comments/" title="Comment policy for this Web site">my comment policy</a>.</p>
+    		{% render_comment_form for entry %}
+    	</div>
+    	{% else %}
+    	<div id="comments_closed">
+			<h2 style="clear: both;">Comments no longer accepted for this entry.</h2>
+			<p id="comment_policy">To prevent spam, comments are no longer allowed after 60 days.</p>
+		</div>
+		{% endif %}
+    {% else %}
+	<div id="comments_closed">
+		<h2 style="clear: both;">Comments are closed for this entry.</h2>
+	</div>
+	{% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block secondary_content %}
+<aside>
+<h2>Entry details</h2>
+<ul id="entry_details">
+	{% comment %}<li>
+		<h3>Short URL for this entry</h3>
+		<p>Posting this entry to Twitter? Please use this shortened URL to maintain the link: <a href="{% shorturl entry %}">{% shorturl object %}</a></p>
+	</li>{% endcomment %}
+	<li>
+		<h3>Publication date and time</h3>
+		<p>{{ entry.pub_date|date:"N j, Y" }} at {{ entry.pub_date|date:"f a" }}</p>
+	</li>
+	<li>
+		<h3>Entry summary</h3>
+		<p>{{ entry.meta_description }}</p>
+	</li>
+	{% if entry.response_link %}
+	<li>
+		<h3>Response link</h3>
+		<p>Published in response to <a href="{{ entry.response_link.url }}" title="{{ entry.response_link.title }}">{{ entry.response_link.title }}</a></p>
+	</li>
+	{% endif %}
+	<li>
+		<h3>Comments</h3>
+		{% if entry.enable_comments %}
+			{% if entry.comments_expired %}
+				{% get_comment_count for blog.entry entry.id as comment_count %}
+				{% if comment_count %}
+					{% cache 500 entry_comments entry %}
+					<p>There {% if_greater comment_count 1 %}are{% else %}is{% endif_greater %} currently <strong>{{ comment_count|apnumber }} comment{{ comment_count|pluralize }}</strong> for this entry. Join the conversation by <a href="#comments_open">posting your own</a>.</p>
+					{% endcache %}
+				{% else %}
+				<p>Nobody has posted a comment on this entry yet. If you have something to say, begin the discussion using <a href="#comments_open">the comment form</a>.</p>
+				{% endif %}
+			{% else %}
+			{% get_comment_count for blog.entry object.id as comment_count %}
+			{% if comment_count %}
+			{% cache 500 entry_comments_expired entry %}
+			<p>There {% if_greater comment_count 1 %}are{% else %}is{% endif_greater %} currently <strong>{{ comment_count|apnumber }} comment{{ comment_count|pluralize }}</strong> for this entry. But comments are no longer being accepted since the entry is older than 60 days. If you want to contact me, please do so using <a href="/contact/">the contact form</a>.</p>
+			{% endcache %}
+			{% else %}
+			<p>Comments are no longer being accepted for this entry since it's older than 60 days. If you want to contact me, please do so using <a href="/contact/">the contact form</a>.</p>
+			{% endif %}
+			{% endif %}
+		{% else %}
+		<p>Comments are closed for this entry. If you want to contact me, please do so using <a href="/contact/">the contact form</a>.</p>
+		{% endif %}
+	</li>
+	<li>
+		<h3>Tags</h3>
+		<p>
+		{% cache 500 entry_tags entry %}
+		{% for tag in entry.tags.all %}
+			<a href="{{ tag.get_absolute_url }}" title="{{ tag.title }}">{{ tag.title }}</a>
+			{% if forloop.last %}{% else %}
+			{% ifequal forloop.revcounter0 1 %}and {% else %}, {% endifequal %}
+			{% endif %}
+		{% endfor %}
+		{% endcache %}
+		</p>
+	</li>
+	<li>
+		<h3>Links in this entry</h3>
+		<ul>
+		{% cache 500 entry_links entry %}
+		{% for link in entry.summary_html|safe|getlinks %}
+			<li><a href="{{ link.href }}" title="{{ link.title }}">{{ link.title }}</a></li>
+		{% endfor %}
+ 		{% for link in entry.body_html|safe|getlinks %}
+			<li><a href="{{ link.href }}" title="{{ link.title }}">{{ link.title }}</a></li>
+		{% endfor %}
+		{% endcache %}
+		</ul>
+	</li>
+	<li>
+		<h3><abbr title="really simple syndication">RSS</abbr></h3>
+		<ul>
+			<li class="rss"><a href="/feeds/blog/">Subscribe to this blog's feed</a></li>
+			{% get_comment_list for blog.entry entry.id as comment_list %}
+			{% if comment_list %}<li class="rss"><a href="/feeds/entry-comments/{{ entry.slug }}/" title="RSS for comments on this entry">Subscribe to the feed for comments posted to this entry</a></li>{% endif %}
+		</ul>
+	</li>
+</ul>
+	<div id="adsense_bigbox">
+		<h2>Advertisement</h2>
+		<h3>Note about ads</h3>
+		<p>You may report questionable or offensive ads by using <a href="/contact/" title="Contact form for patrickbeeson.com">the contact form</a>.</p>
+		<script>
+			<!--
+			google_ad_client = "pub-3760747937530921";
+			google_ad_width = 336;
+			google_ad_height = 280;
+			google_ad_format = "336x280_as";
+			google_ad_type = "text";
+			google_ad_channel = "";
+			google_color_border = "092e20";
+			google_color_bg = "FFFFFF";
+			google_color_link = "445057";
+			google_color_text = "75818A";
+			google_color_url = "000000";
+			//-->
+		</script>
+		<script src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+	</div>
+</aside>
+{% endblock %}
+
+{% block external_content %}
+	<div id="author_meta">
+		<h2>Author details</h2>
+		<img src="http://media.patrickbeeson.com/images/patrickbeeson_mug.jpg" width="127" height="144" alt="Patrick Beeson" />
+		<ul>
+			<li>Name: Patrick Beeson</li>
+			<li>Occupation: Director of Digital Communications, <a href="http://www.wfu.edu" title="Wake Forest University">Wake Forest University</a></li>
+			<li>Location: <a href="http://www.cityofws.org/" title="More information about Winston-Salem, NC">Winston-Salem, NC</a></li>	
+		</ul>
+		<p>Want to learn more? Visit my <a href="/about/">about section</a> or <a href="/contact/">send me a message</a>.</p>
+	</div>
+	<div id="more_reading">
+		<h2>Related blog entries</h2>		
+		<ul>
+		{% for related_entry in entry.related_entry_set.all %}
+    		<li><a href="{{ related_entry.get_absolute_url }}" title="{{ related_entry.title }}">{{ related_entry.title }}</a></li>
+		{% endfor %}
+		</ul>
+		
+{% comment %}
+		{% get_latest_objects blog.entry 10 as latest_entries %}
+		<ul>
+		{% for entry in latest_entries %}
+		{% ifequal entry.status 3 %}
+			<li><a href="{{ entry.get_absolute_url }}" title="{{ entry.title }}">{{ entry.title }}</a></li>
+		{% endifequal %}
+		{% endfor %}
+		</ul>
+		{% endcomment %}
+	</div>
+	<div id="flickr_photo">
+		<h2>Latest photo on Flickr</h2>
+		{% cache 3600 flickr_feed %}
+		{% include_feed "http://api.flickr.com/services/feeds/photos_public.gne?id=51035748274@N01&amp;lang=en-us&amp;format=rss_200" 1 feed_includes/latest_flickrphoto.html %}
+		{% endcache %}
+		
+		{% comment %}
+		<h2>Latest update on Twitter</h2>
+		{% cache 3600 twitter_feed %}
+		{% include_feed "http://twitter.com/statuses/user_timeline/12510.rss" 1 feed_includes/latest_twitter.html %}
+		{% endcache %}
+		{% endcomment %}
+	</div>
+{% endblock %}
+
+{% block facebook_js_sdk %}
+<div id="fb-root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({appId: '128762500483273', status: true, cookie: true,
+                 xfbml: true});
+      };
+      (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = document.location.protocol +
+          '//connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+      }());
+    </script>
+{% endblock %}
