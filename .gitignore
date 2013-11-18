@@ -1,0 +1,3 @@
+settings.py
+*.pyc
+update_s3.py
